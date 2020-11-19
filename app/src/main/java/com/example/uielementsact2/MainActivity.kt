@@ -1,48 +1,72 @@
 package com.example.uielementsact2
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
+import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import android.widget.Toast
-import androidx.core.view.get
+
+    var songsArray = arrayOf("Fix You", "Superman", "Something More", "Perfect", "Far Away", "Parting Time", "Hello World", "Dream", "Cool Down", "Home", "Dynamite", "Sugar")
+    var selectedSong = arrayListOf<String>()
 
 class MainActivity : AppCompatActivity() {
+    private var songListView: ListView? = null
+    private var adapter: ArrayAdapter<String>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val songsArray = arrayOf("Fix You", "Superman", "Something More", "Perfect", "Far Away", "Parting Time", "Hello World", "Dream", "Cool Down", "Home")
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, songsArray)
-        val songsListView = findViewById<ListView>(R.id.songsListView)
-        songsListView.adapter = adapter
-
-        songsListView.onItemClickListener = AdapterView.OnItemClickListener{ parent, view, position, id ->
-            val songsArray = findViewById<ListView>(R.id.songsListView)
-            registerForContextMenu(songsArray[position])
+        songListView = findViewById<ListView>(R.id.songsListView)
+        adapter = ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, songsArray)
+        songListView?.adapter = adapter
+        registerForContextMenu(songListView)
         }
-    }
-    // when the image is long pressed
+
+    // when the song is long pressed
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
-        val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.song_details_menu, menu)
+        val inflater = menuInflater
+        inflater.inflate(R.menu.songs_menu, menu)
     }
     //when the menu option is clicked
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+        val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
+        when (item.itemId) {
             R.id.add_to_queue -> {
-                Toast.makeText(this, "Added to queue!", Toast.LENGTH_SHORT).show()
+                val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
+                selectedSong.add(songsArray[info.position])
                 true
             }
-            else -> super.onContextItemSelected(item)
         }
+        return super.onContextItemSelected(item)
     }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.main_menu, menu)
         return true
     }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.queue_page -> {
+                startActivity(Intent(this, SongsQueueActivity::class.java))
+                true
+            }
+            R.id.songs_page -> {
+                startActivity(Intent(this, MainActivity::class.java))
+                true
+            }
+            R.id.albums_page -> {
+                startActivity(Intent(this, AlbumsActivity::class.java))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 }
+
+
+

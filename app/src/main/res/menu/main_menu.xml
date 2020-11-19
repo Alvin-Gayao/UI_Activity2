@@ -11,7 +11,7 @@
         android:title="Songs">
     </item>
     <item
-        android:id="@+id/album_page"
+        android:id="@+id/albums_page"
         android:title="Albums">
     </item>
 </menu>
