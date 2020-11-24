@@ -8,9 +8,13 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.*
 
-    var songsArray = arrayOf("Fix You", "Superman", "Something More", "Perfect", "Far Away", "Parting Time", "Hello World", "Dream", "Cool Down", "Home", "Dynamite", "Sugar")
-    var selectedSong = arrayListOf<String>()
+    var songsArray = mutableListOf<String>("Fix You", "Superman", "Something More", "Perfect", "Far Away", "Parting Time", "Hello World", "Dream", "Cool Down", "Home", "Dynamite", "Sugar")
+    var selectedSong = mutableListOf<String>()
 
 class MainActivity : AppCompatActivity() {
     private var songListView: ListView? = null
@@ -33,11 +37,15 @@ class MainActivity : AppCompatActivity() {
     }
     //when the menu option is clicked
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
         when (item.itemId) {
             R.id.add_to_queue -> {
                 val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
                 selectedSong.add(songsArray[info.position])
+                val snackbar = Snackbar.make(mainLayout,"View Listed Songs?",Snackbar.LENGTH_LONG)
+                snackbar.setAction("Go",View.OnClickListener {
+                    startActivity(Intent(applicationContext,SongsQueueActivity::class.java))
+                })
+                snackbar.show()
                 true
             }
         }
