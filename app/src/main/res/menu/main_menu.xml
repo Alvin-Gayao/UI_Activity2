@@ -14,4 +14,8 @@
         android:id="@+id/albums_page"
         android:title="Albums">
     </item>
+    <item
+        android:id="@+id/add_song"
+        android:title="Add Song">
+    </item>
 </menu>

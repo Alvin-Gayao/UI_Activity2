@@ -18,7 +18,7 @@ class AlbumDetailsActivity : AppCompatActivity() {
     var album1 = mutableListOf("Fix You", "Superman", "Something More", "Perfect")
     var album2 = mutableListOf("Far Away", "Parting Time", "Hello World", "Dream")
     var album3 = mutableListOf("Cool Down", "Home", "Dynamite", "Sugar")
-    private val albumNames = arrayOf("Album 1", "Album 2", "Album 3")
+    //private val albumNames = arrayOf("Album 1", "Album 2", "Album 3")
     private var songListView: ListView? = null
     private var adapter: ArrayAdapter<String>? = null
 
@@ -30,10 +30,9 @@ class AlbumDetailsActivity : AppCompatActivity() {
         val intent = intent
         // Get Selected Image Id
         val position = intent.extras!!.getInt("id")
-        val imageAdapter = AlbumAdapter(this)
-        val imageView: ImageView = findViewById<View>(R.id.imageView) as ImageView
-        imageView.setImageResource(imageAdapter.albumImages[position])
-        textView.text = albumNames[position]
+        val albumAdapter = AlbumAdapter(this)
+        val textView: TextView = findViewById<TextView>(R.id.textView) as TextView
+        textView.setText(albumAdapter.albums[position].title)
 
         songListView = findViewById<ListView>(R.id.albumListView)
         if(position == 0) {
