@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     lateinit var songsListView : ListView
-    lateinit var songsTableHandler: SongsTableHandler
+    lateinit var songsTableHandler : SongsTableHandler
     lateinit var songs : MutableList<Song>
     lateinit var adapter : ArrayAdapter<Song>
     override fun onCreate(savedInstanceState: Bundle?) {

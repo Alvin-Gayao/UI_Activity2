@@ -24,7 +24,7 @@ class AlbumsTableHandler (var context: Context): SQLiteOpenHelper(context, DATAB
         //TODO("Not yet implemented")
         //define query
         val query = "CREATE TABLE "+TABLE_NAME+" ("+COL_ID+" INTEGER PRIMARY KEY, "+COL_TITLE+
-                "  TEXT, "+COL_DATE+" DATE)"
+                "  TEXT, "+COL_DATE+" TEXT)"
         //execute
         db?.execSQL(query)
     }
@@ -40,8 +40,7 @@ class AlbumsTableHandler (var context: Context): SQLiteOpenHelper(context, DATAB
         //get content value
         val contentValues = ContentValues()
         contentValues.put(COL_TITLE, album.title)
-        val release_date = album.release_date.toString()
-        contentValues.put(COL_DATE, release_date)
+        contentValues.put(COL_DATE, album.release_date)
         //insert
         val  result = database.insert(TABLE_NAME, null, contentValues)
         //check result
@@ -54,8 +53,7 @@ class AlbumsTableHandler (var context: Context): SQLiteOpenHelper(context, DATAB
         val database = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(COL_TITLE, album.title)
-        val release_date = album.release_date.toString()
-        contentValues.put(COL_DATE, release_date)
+        contentValues.put(COL_DATE, album.release_date)
         val  result = database.update(TABLE_NAME, contentValues,"id = "+album.id, null)
 
         if(result == 0){
@@ -76,18 +74,42 @@ class AlbumsTableHandler (var context: Context): SQLiteOpenHelper(context, DATAB
         }
         var id : Int
         var title : String
-        var release_date : Date
+        var release_date : String
 
         if(cursor.moveToFirst()){
             do {
                 id = cursor.getInt(cursor.getColumnIndex(COL_ID))
                 title = cursor.getString(cursor.getColumnIndex(COL_TITLE))
-                release_date = cursor.getString(cursor.getColumnIndex(COL_DATE)) as Date
+                release_date = cursor.getString(cursor.getColumnIndex(COL_DATE))
 
                 val album = Album(id, title, release_date)
                 albumsList.add(album)
             }while (cursor.moveToNext())
         }
         return albumsList
+    }
+
+    fun readOne(album_id: Int): Album {
+        var album : Album = Album(0, "", "")
+        val query = "SELECT * FROM ${AlbumsTableHandler.TABLE_NAME} WHERE id = $album_id"
+        val database = this.readableDatabase
+        var cursor: Cursor? = null
+        try {
+            cursor = database.rawQuery(query, null)
+        } catch (e: SQLException) {
+            return album
+        }
+        var id: Int
+        var title: String
+        var release_date: String
+
+        if (cursor.moveToFirst()) {
+            id = cursor.getInt(cursor.getColumnIndex(AlbumsTableHandler.COL_ID))
+            title = cursor.getString(cursor.getColumnIndex(AlbumsTableHandler.COL_TITLE))
+            release_date = cursor.getString(cursor.getColumnIndex(AlbumsTableHandler.COL_DATE))
+
+            album = Album(id, title, release_date)
+        }
+        return album
     }
 }

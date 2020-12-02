@@ -4,20 +4,26 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import com.example.uielementsact2.models.Album
-import com.example.uielementsact2.models.Song
 import kotlinx.android.synthetic.main.activity_add_album.*
-import java.sql.Date
+import kotlinx.android.synthetic.main.activity_add_album.selectDateButton
+import kotlinx.android.synthetic.main.activity_edit_album.*
+import kotlinx.android.synthetic.main.album_card_view.*
 import java.util.*
 
-class AddAlbumActivity : AppCompatActivity() {
-    lateinit var addAlbumButton : Button
-    lateinit var albumTitleET : EditText
-    lateinit var albumReleaseTV : TextView
+class EditAlbumActivity : AppCompatActivity() {
+    lateinit var updateAlbumButton : Button
+    lateinit var editAlbumTitleET : EditText
+    lateinit var editAlbumReleaseTV : TextView
+    lateinit var album : Album
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_album)
+        setContentView(R.layout.activity_edit_album)
+
         //calendar
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -31,21 +37,26 @@ class AddAlbumActivity : AppCompatActivity() {
             //show dialog
             dpd.show()
         }
+        val album_id = intent.getIntExtra("album_id", 0)
 
         val databaseHandler = AlbumsTableHandler(this)
-        albumTitleET = findViewById(R.id.albumTitleET)
-        albumReleaseTV = findViewById(R.id.dateTextView)
+        album = databaseHandler.readOne(album_id)
+        editAlbumTitleET = findViewById(R.id.editAlbumTitleET)
+        editAlbumReleaseTV = findViewById(R.id.editDateTextView)
 
-        addAlbumButton = findViewById(R.id.addAlbumButton)
+        editAlbumTitleET.setText(album.title)
+        editAlbumReleaseTV.setText(album.release_date)
+
+        updateAlbumButton = findViewById(R.id.updateAlbumButton)
         addAlbumButton.setOnClickListener {
             //get the fields from form
             val title = albumTitleET.text.toString()
-            val release_date = albumReleaseTV.text.toString()
-            //assign to a book model
-            val album = Album(title = title,  release_date = release_date)
+            val release_date = editAlbumReleaseTV.text.toString()
+            //assign to a album model
+            val updated_album = Album(title = title,  release_date = release_date)
             //save it to database
-            if(databaseHandler.create(album)) {
-                Toast.makeText(this, "Album was added", Toast.LENGTH_SHORT).show()
+            if(databaseHandler.create(updated_album)) {
+                Toast.makeText(this, "Album was updated", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(applicationContext, AlbumsActivity::class.java))
             }
             else {

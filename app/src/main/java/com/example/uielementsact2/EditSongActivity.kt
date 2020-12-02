@@ -38,10 +38,10 @@ class EditSongActivity : AppCompatActivity() {
             val title = editSongTitleET.text.toString()
             val artist = editSongArtistET.text.toString()
             val album = editSongAlbumET.text.toString()
-            //assign to a book model
-            val updated_book = Song(id = song.id, title = title, artist = artist, album = album)
+            //assign to a song model
+            val updated_song = Song(id = song.id, title = title, artist = artist, album = album)
             //save it to database
-            if(databaseHandler.update(updated_book)) {
+            if(databaseHandler.update(updated_song)) {
                 Toast.makeText(this, "Song was edited", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(applicationContext, MainActivity::class.java))
             }
